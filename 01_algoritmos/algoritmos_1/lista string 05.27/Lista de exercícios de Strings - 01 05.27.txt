@@ -1,0 +1,173 @@
+//ex 1
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char frase[100];
+    int i, qtde = 0;
+    printf("Digite uma frase");
+    fgets(frase, 100, stdin); //stdin = teclado
+
+    for (i = 0; i < (strlen(frase)-1); i++)
+    {
+        if (frase[i] == 'a' || frase[i] == 'A' || frase[i] == 'e' || frase[i] == 'E' || frase[i] == 'i' || frase[i] == 'I' || frase[i] == 'o' || frase[i] == 'O' || frase[i] == 'u' || frase[i] == 'U')
+        {
+            qtde++;
+        }
+    }
+
+    printf("%d", qtde);
+
+    return 0;
+}
+
+//ex 2
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <string.h>
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    char vogal[] = "aáàââãeéêiíoôuúAÁÀEÉIÍOUèêìîóòõùûÂÃÈÊÌÎÓÒÔÚÙÛ"; //y e Y
+    char consoante[] = "bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZİ"; //ç e Ç n vai
+    char frase[100];
+    int i, j, qtd_c = 0, qtd_v = 0;
+
+    //ou  {'a', 'á', 'à', 'â', 'ã', 'e', 'é', 'ê', 'i', 'í', 'o', 'ó', 'ô', 'u', 'ú'};
+    //ou {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
+    //tem q por as maiusculas neles
+    printf("Digite uma frase:\n");
+    fgets(frase, 100, stdin); 
+
+    for (i = 0; i < strlen(frase); i++)
+    {
+        for (j = 0; j < strlen(consoante); j++)
+        {
+            if (frase[i] == consoante[j])
+            {
+                qtd_c++;
+                break;
+            }
+        }
+
+        for (j = 0; j < strlen(vogal); j++)
+        {
+            if (frase[i] == vogal[j])
+            {
+                qtd_v++;
+                break;
+            }
+        }
+    }
+
+    printf("Há %d consoantes na frase.", qtd_c);
+    printf("\nHá %d vogais na frase.", qtd_v);
+
+    return 0;
+}
+
+//ex 3
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#include <string.h>
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i, qtd = 0, j;
+    char frase[100];
+    printf("Digite uma frase:\n");
+    fgets(frase, 100, stdin);
+
+    //frase[strcspn(frase, "\n")] = 0;
+    //mudar primeira ocorrência, definir cm 0 mata td dps dessa posição
+    
+    if (strlen(frase) > 1) //retirar ultimo "\n" sem riscos
+    {
+        if (frase[strlen(frase) - 1] != NULL && frase[strlen(frase) - 1] == '\n')
+        {
+            frase[strlen(frase) - 1] = 0; //retirar ultimo "\n"
+        }
+    }
+
+    if (frase[0] != ' ' && frase[0] != '\n')
+    {
+        qtd++;
+    }
+
+    for (i = 1; i < (strlen(frase) - 1); i++) //conta o enter
+    {
+        if (frase[i] != ' ' && frase[i - 1] == ' ')
+        {
+            qtd++;
+        }
+    }
+
+    printf("Foram digitadas %d palavras.", qtd);
+
+    return 0;
+}
+
+//ex 4 capeta
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#include <string.h>
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i, j, k = 0;
+    int tam, tam_d = 256;
+    char frase[100], letras[tam_d];
+    int qtd_letras[tam_d];
+
+    for (i = 0; i < tam_d; i++)
+    {
+        qtd_letras[i] = 0;
+        letras[i] = 0; //: 0 ou '\0' é a msm coisa
+    }
+
+    printf("Digite uma frase:\n");
+    fgets(frase, 100, stdin);
+    frase[strlen(frase) - 1] = 0;
+    //strcpy(frase, "prova ropva");
+
+    tam = strlen(frase);
+
+    for (i = 0; i < tam; i++)
+    {
+        j = 0;
+        while (frase[i] != letras[j] && j < tam)
+        {
+            j++;
+        }
+        if (j == tam && frase[i] != letras[j] && frase[i] != ' ')
+        {
+            letras[k] = frase[i];
+            qtd_letras[k]++;
+            k++;
+        }
+        else if (frase[i] == letras[j])
+        {
+            qtd_letras[j]++;
+        }
+    }
+
+    for (i = 0; i < k; i++)
+    {
+        if (qtd_letras[i] > 1)
+        {
+            printf("A letra %c se repete %d vezes.\n", letras[i], qtd_letras[i]);
+        }
+    }
+
+    return 0;
+}

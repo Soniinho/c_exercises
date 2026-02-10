@@ -1,0 +1,582 @@
+//ex 1
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#define Q 10
+
+//pelo menos 1 pedido é necessário, mesmo se o cod_cliente = 0
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i, existe = 0;
+    int cod_produtos[Q], total_estoque[Q];
+    int cod_cliente, cod_compra, qtd_produto;
+
+    printf("Digite 10 códigos de produtos e sua quantidade no estoque:\n\n");
+
+    for (i = 0; i < Q; i++)
+    {
+        printf("%dº produto: ", i + 1);
+        scanf("%d%*c", &cod_produtos[i]);
+
+        printf("Total deste produto no estoque: ");
+        scanf("%d%*c", &total_estoque[i]);
+    }
+
+    printf("\nParte do cliente:\n\n");
+
+    do
+    {
+        printf("Digite o código do produto que deseja comprar: ");
+        scanf("%d%*c", &cod_compra);
+
+        for (i = 0; i < Q; i++)
+        {
+            if (cod_compra == cod_produtos[i])
+            {
+                existe = 1;
+                break;
+            }
+        }
+
+        if (existe == 1)
+        {
+            printf("Digite quanto deseja comprar: ");
+            scanf("%d%*c", &qtd_produto);
+
+            printf("\n");
+            if (total_estoque[i] == 0)
+            {
+                printf("Não temos estoque suficiente dessa mercadoria.");
+            }
+            else if (qtd_produto <= total_estoque[i])
+            {
+                total_estoque[i] -= qtd_produto;
+                printf("Pedido atendido.");
+            }
+            else if (qtd_produto > total_estoque[i])
+            {
+                printf("Só foi possível comprar %d produtos.", total_estoque[i]);
+                total_estoque[i] = 0;
+            }
+            existe = 0;
+        }
+        else
+        {
+            printf("\nEsse código de produto não existe em nosso estoque.");
+        }
+
+        printf("\n\nDigite o seu código de cliente (0 finaliza as compras): ");
+        scanf("%d%*c", &cod_cliente);
+        printf("\n");
+    } while (cod_cliente != 0);
+
+    system("cls");
+
+    for (i = 0; i < Q; i++)
+    {
+        printf("Código[%d]: %d\n", i + 1, cod_produtos[i]);
+        printf("Quantidade desse produto no estoque: %d\n\n", total_estoque[i]);
+    }
+    printf("Obrigado, volte sempre!");
+
+    exit(main);
+}
+
+//ex 2
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#define L 15 //15 10
+#define P 10
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i, j;
+    int logica[L], prog[P];
+    int qtd_igual = 0;
+
+    printf("Digite as matrículas dos alunos de Lógica:\n");
+    for (i = 0; i < L; i++)
+    {
+        printf("%d°: ", i + 1);
+        scanf("%d%*c", &logica[i]);
+    }
+
+    printf("\nDigite as matrículas dos alunos de Linguagem de Programação:\n");
+    for (i = 0; i < P; i++)
+    {
+        printf("%d°: ", i + 1);
+        scanf("%d%*c", &prog[i]);
+    }
+
+    for (j = 0; j < P; j++)
+    {
+        i = 0;
+        while (logica[i] != prog[j] && i < L)
+        {
+            i++;
+        }
+        if (i < L)
+        {
+            qtd_igual++;
+        }
+    }
+
+    printf("\n");
+    printf("Há %d alunos cursando as 2 diciplinas.", qtd_igual);
+    return 0;
+}
+
+//ex 3
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#include <string.h>
+#define N 10
+
+//total de vendas em reais e perc_comissao em %
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i;
+    char vendedores[N][30];
+    char maior_nome[30], menor_nome[30];
+    float tot_vend_ind[N], perc_comissao[N];
+    float tot_vendas = 0, maior_val, menor_val;
+
+    printf("Digite os nomes dos vendedores, seu total de vendas em reais e o percentual de comissão\nde cada um:\n\n");
+    for (i = 0; i < N; i++)
+    {
+        printf("%dº: ", i + 1);
+        fgets(vendedores[i], 30, stdin);
+        vendedores[i][strlen(vendedores[i]) - 1] = 0; //tirar \n
+
+        printf("Total de vendas de %s: R$", vendedores[i]);
+        scanf("%f%*c", &tot_vend_ind[i]);
+        tot_vendas += tot_vend_ind[i];
+
+        printf("Percentual de comissão de %s: ", vendedores[i]);
+        scanf("%f%*c", &perc_comissao[i]);
+
+        if (i == 0)
+        {
+            maior_val = menor_val = tot_vend_ind[i]; //os 2 são iguais a tot_vend_ind
+            strcpy(maior_nome, vendedores[i]);
+            strcpy(menor_nome, vendedores[i]);
+        }
+        else if (tot_vend_ind[i] > maior_val)
+        {
+            maior_val = tot_vend_ind[i];
+            strcpy(maior_nome, vendedores[i]);
+        }
+        else if (tot_vend_ind[i] < menor_val)
+        {
+            menor_val = tot_vend_ind[i];
+            strcpy(menor_nome, vendedores[i]);
+        }
+    }
+    printf("\nExtrato\n");
+    for (i = 0; i < N; i++)
+    {
+        printf("%dº vendedor = %s\n", i+1, vendedores[i]);
+        printf("Comissão = %.2f\n\n", tot_vend_ind[i] * (perc_comissao[i] / 100));
+    }
+
+    printf("O total de vendas foi de %.2f.\n", tot_vendas);
+    printf("O maior valor a receber é de R$%.2f, e o funcionário %s que o receberá.\n", maior_val, maior_nome);
+    printf("O menor valor a receber é de R$%.2f, e o funcionário %s que o receberá.\n", menor_val, menor_nome);
+    
+    return 0;
+}
+
+//ex 4
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#include <string.h>
+#define N 7
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i;
+    char nomes[N][30], nome_maior_media[30];
+    float media[N], maior_media;
+
+    printf("Digite o nome de %d alunos e suas médias a seguir:\n", N);
+    for (i = 0; i < N; i++)
+    {
+        printf("%dº aluno: ", i + 1);
+        fgets(nomes[i], 30, stdin);
+        nomes[i][strlen(nomes[i]) - 1] = 0;
+
+        printf("Média de %s: ", nomes[i]);
+        scanf("%f%*c", &media[i]);
+
+        if (i == 0)
+        {
+            maior_media = media[i];
+            strcpy(nome_maior_media, nomes[i]);
+        }
+        else if (media[i] > maior_media)
+        {
+            maior_media = media[i];
+            strcpy(nome_maior_media, nomes[i]);
+        }
+    }
+    printf("\nO aluno com maior média (%.2f) é %s.\n\n", maior_media, nome_maior_media);
+    printf("Alunos com médias abaixo de 7:\n\n");
+
+    for (i = 0; i < N; i++)
+    {
+        if (media[i] < 7)
+        {
+            printf("O aluno %s obteve %.2f de média final.\n", nomes[i], media[i]);
+            printf("%s precisa tirar %.2f no exame final para ser aprovado.\n", nomes[i], 10 - media[i]);
+        }
+    }
+
+    return 0;
+}
+
+//ex 5
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#include <string.h>
+#define N 10
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i;
+    char produtos[N][30];
+    int cod_prod[N];
+    float preco_prod[N];
+
+    for (i = 0; i < N; i++)
+    {
+        printf("Nome do %dº produto: ", i + 1);
+        fgets(produtos[i], 30, stdin);
+        produtos[i][strlen(produtos[i]) - 1] = 0;
+
+        printf("Digite o código deste produto: ");
+        scanf("%d%*c", &cod_prod[i]);
+
+        printf("Digite o preço deste produto: ");
+        scanf("%f%*c", &preco_prod[i]);
+        printf("\n");
+    }
+
+    for (i = 0; i < N; i++)
+    {
+        if (cod_prod[i] % 2 == 0 && preco_prod[i] > 1000)
+        {
+            preco_prod[i] += 0.2 * preco_prod[i];
+        }
+        else if (cod_prod[i] % 2 == 0)
+        {
+            preco_prod[i] += 0.15 * preco_prod[i];
+        }
+        else if (preco_prod[i] > 1000)
+        {
+            preco_prod[i] += 0.1 * preco_prod[i];
+        }
+    }
+    system("cls");
+
+    for (i = 0; i < N; i++)
+    {
+        printf("[%dº]\nNome: %s\nCódigo: %d\nPreço: %.2f\n\n", i + 1, produtos[i], cod_prod[i], preco_prod[i]);
+    }
+
+    return 0;
+}
+
+//ex 6
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+
+/*  
+    O primeiro vetor resultante será composto pela soma de cada número par 
+    do primeiro vetor somado a todos os números do segundo vetor.
+    
+    O segundo vetor resultante será composto pela quantidade de divisores que cada número 
+    ímpar do primeiro vetor tem no segundo vetor.
+*/
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i, j, k, l;                 //variável auxiliar de loop
+    int num_1[10], num_2[5];        //vetores iniciais
+    int result_1[10], result_2[10]; //vetores resutantes
+    int aux_soma_num2;              //resultado da soma dos valores do vetor num_2
+
+    printf("Será pedido para digitar 10 números para um vetor.\n");
+    for (i = 0; i < 10; i++)
+    {
+        printf("%dº número: ", i + 1);
+        scanf("%d%*c", &num_1[i]);
+    }
+
+    printf("\nSerá pedido para digitar 5 números para outro vetor.\n");
+    for (i = 0; i < 5; i++)
+    {
+        printf("%dº número: ", i + 1);
+        scanf("%d%*c", &num_2[i]);
+    }
+
+    //criar o valor auxiliar do vetor num_2
+    for (i = 0, aux_soma_num2 = 0; i < 5; i++)
+    {
+        aux_soma_num2 += num_2[i];
+    }
+
+    //primeiro vetor resultante
+    i = 0;
+    j = 0; //variável aux do 1° vet resultante
+    while (i < 10)
+    {
+        if (num_1[i] % 2 == 0)
+        {
+            result_1[j] = num_1[i]+ aux_soma_num2;
+            j++;
+        }
+        i++;
+    }
+
+    //zerar o vetor resultante 2
+    for (i = 0; i < 10; i++)
+    {
+        result_2[i] = 0;
+    }
+
+    //segundo vetor resultante
+    i = 0;
+    k = 0; //variável aux do 2° vet resultante
+    while (i < 10)
+    {
+        if (num_1[i] % 2 != 0)
+        {
+            for (l = 0; l < 5; l++)
+            {
+                if (num_1[i] % num_2[l] == 0)
+                {
+                    result_2[k]++;                    
+                }
+            }
+            k++;
+        }
+        i++;
+    }
+
+    printf("\nO 1º vetor resultante é:\n");
+    for (i = 0; i < j; i++)
+    {
+        printf("[%d]: %d\n", i, result_1[i]);
+    }
+    printf("\nO 2º vetor resultante é:\n");
+    for (i = 0; i < k; i++)
+    {
+        printf("[%d]: %d\n", i, result_2[i]);
+    }
+
+    return 0;
+}
+
+//ex 7
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i, j;
+    float A[10], B[15]; //n pd ser preenchido inteiro
+
+    printf("Será pedido para digitar 10 valores:\n");
+    for (i = 0; i < 10; i++)
+    {
+        printf("%dº número: ", i + 1);
+        scanf("%f%*c", &A[i]);
+    }
+
+    //n pd ser menor ou igual a 0
+    for (i = 0, j = 0; i < 10; i++)
+    {
+        if (A[i] > 0)
+        {
+            B[j] = A[i];
+            j++;
+        }
+    }
+
+    printf("\nO vetor sem os valores menores ou iguais a 0 é:\n");
+    for (i = 0; i < j; i++)
+    {
+        printf("[%d] = %.3f\n", i, B[i]);
+    }
+
+    return 0;
+}
+
+//ex 8
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#include <string.h>
+
+//esse programa n funciona se por acento
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i, j;
+    char frase[100], frase_cript[100];
+    char consoantes[] = "bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ"; //ç n vai sla pq
+
+    printf("Digite uma frase:\n");
+    fgets(frase, 100, stdin);
+
+    frase[strlen(frase) - 1] = 0; //tira o \n, -1 pq é vetor
+    j = strlen(frase) - 1;        //vetor começa em 0
+
+    //inverter a frase
+    for (i = 0; frase[i] != '\0'; i++)
+    {
+        frase_cript[j] = frase[i];
+        j--;
+    }
+    frase_cript[i] = '\0'; //evitar mostrar lixo de memória
+
+    strcpy(frase, frase_cript); //põe a invertida na frase digitada
+
+    //trocar consoantes por #
+    for (i = 0; i < strlen(frase); i++)
+    {
+        for (j = 0; j < strlen(consoantes); j++)
+        {
+            if (frase[i] == consoantes[j])
+            {
+                frase_cript[i] = '#';
+            }
+        }
+    }
+
+    printf("\nA nova frase é:\n%s", frase_cript);
+    return 0;
+}
+
+//ex 9
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#include <string.h>
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i;
+    char frase[100], frase_nova[100];
+
+    printf("Digite uma frase:\n");
+    fgets(frase, 100, stdin);
+
+    frase[strlen(frase) - 1] = 0;
+    strcpy(frase_nova, frase);
+
+    for (i = 0; i < strlen(frase); i++)
+    {
+        if (frase[i] == ' ' && frase[i - 1] != ' ')
+        {
+            frase_nova[i] = '\n';
+        }
+    }
+    frase[i] = '\0';
+
+    printf("\n%s", frase_nova);
+
+    return 0;
+}
+
+//ex 10
+#include <stdio.h>  //f6 para compilar
+#include <stdlib.h> //encoding windows 1252(Western)
+#include <locale.h> //fold all comments
+#include <string.h>
+
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+
+    int i, j, tam_f;
+    char frase[100], frase_corr[100];
+    int qtd_palavras = 1;
+
+    printf("Digite uma frase:\n"); //digitar só espaços causa erro
+    fgets(frase, 100, stdin);
+    frase[strlen(frase) - 1] = 0;
+    tam_f = strlen(frase);
+
+    //tirar espaço do fim
+    i = tam_f;
+    while (frase[i - 1] == ' ')
+    {
+        i--;
+    }
+    frase[i] = 0; //msm q definir cm '\0'
+    tam_f = strlen(frase);
+
+    //tirar espaço do início
+    i = 0;
+    while (frase[i] == ' ')
+    {
+        i++;
+    }
+    for (j = 0; i < tam_f; i++, j++)
+    {
+        frase_corr[j] = frase[i];
+    }
+    strcpy(frase, frase_corr);
+    tam_f = strlen(frase);
+
+    //tirar espaços a mais entre palavras
+    for (i = 0, j = 0; i < tam_f; i++, j++)
+    {
+        while (frase[i] == ' ' && frase[i + 1] == ' ')
+        {
+            i++;
+        }
+        frase_corr[j] = frase[i];
+    }
+    frase_corr[j] = 0;
+    tam_f = strlen(frase_corr);
+
+    //contar as palavras
+    for (i = 0; i < tam_f; i++)
+    {
+        if (frase_corr[i] == ' ')
+        {
+            qtd_palavras++;
+        }
+    }
+
+    //digitar a frase
+    printf("\n%s", frase_corr);
+    printf("\nHá %d palavras na frase acima.", qtd_palavras);
+
+    return 0;
+}

@@ -1,0 +1,8 @@
+int ypiz234 = 10;
+int z12314 = x + y;
+
+if (z + 15) {
+    int x = z * 2;
+} else {
+    int yyy = z / 2;
+}
